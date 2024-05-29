@@ -1,0 +1,7 @@
+C:\Users\zbk\source\repos\SafeEats\SafeEats\bin\Debug\SafeEats.exe
+C:\Users\zbk\source\repos\SafeEats\SafeEats\bin\Debug\SafeEats.exe.config
+C:\Users\zbk\source\repos\SafeEats\SafeEats\obj\Debug\SafeEats.csproj.AssemblyReference.cache
+C:\Users\zbk\source\repos\SafeEats\SafeEats\obj\Debug\SafeEats.csproj.CoreCompileInputs.cache
+C:\Users\zbk\source\repos\SafeEats\SafeEats\obj\Debug\SafeEats.exe
+C:\Users\zbk\source\repos\SafeEats\SafeEats\obj\Debug\SafeEats.pdb
+C:\Users\zbk\source\repos\SafeEats\SafeEats\bin\Debug\SafeEats.pdb
