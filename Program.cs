@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 
 namespace SafeEats
@@ -372,6 +373,19 @@ namespace SafeEats
 
                     Console.Write("Digite o seu e-mail: ");
                     string email = Console.ReadLine();
+
+                    // Verificação se o e-mail contém a palavra "fornecedor"
+                    if (email.ToLower().Contains("fornecedor"))
+                    {
+                        Console.Clear();
+                        mensagemLogin();
+                        Console.WriteLine("Usuário ou senha inválidos. Verifique o e-mail e a senha!");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        menuInicial();
+                        return; // Sai do método após redirecionar para o menu inicial
+                    }
+
                     Console.Write("Digite a sua senha: ");
 
                     string senha = "";
@@ -437,8 +451,6 @@ namespace SafeEats
                         }
                     }
                 }
-
-
             }
 
             public string getEmailLogado()
@@ -569,11 +581,20 @@ namespace SafeEats
 
             void mensagemVendas()
             {
-                Console.WriteLine("\t\t\t██████ ▄█████▄ █████▄ ██████▄ ▄█████ ▄█████ ▄█████ ██████▄ ▄█████▄ █████▄\r\n" +
-                                  "\t\t\t██     ██   ██ ██  ██ ██   ██ ██     ██     ██     ██   ██ ██   ██ ██  ██\r\n" +
-                                  "\t\t\t█████  ██   ██ █████▀ ██   ██ █████  ██     █████  ██   ██ ██   ██ █████▀\r\n" +
-                                  "\t\t\t██     ██   ██ ██  ██ ██   ██ ██     ██     ██     ██   ██ ██   ██ ██  ██\r\n" +
-                                  "\t\t\t██     ▀█████▀ ██  ██ ██   ██ ▀█████ ▀█████ ▀█████ ██████▀ ▀█████▀ ██  ██\n");
+                Console.WriteLine("\t\t\t█████▄ ▄█████ ██████▄ ██████ ██████▄ ▄█████▄ ▄██████\r\n" +
+                                  "\t\t\t██  ██ ██     ██   ██   ██   ██   ██ ██   ██ ██     \r\n" +
+                                  "\t\t\t█████▀ █████  ██   ██   ██   ██   ██ ██   ██ ▀█████▄\r\n" +
+                                  "\t\t\t██     ██     ██   ██   ██   ██   ██ ██   ██      ██\r\n" +
+                                  "\t\t\t██     ▀█████ ██████▀ ██████ ██████▀ ▀█████▀ ██████▀\n");
+            }
+
+            void mensagemRelatorios()
+            {
+                Console.WriteLine("\t\t\t█████▄ ▄█████ ██     ▄████▄ ████████ ▄█████▄ █████▄ ██████ ▄█████▄ ▄██████\r\n" +
+                                  "\t\t\t██  ██ ██     ██     ██  ██    ██    ██   ██ ██  ██   ██   ██   ██ ██     \r\n" +
+                                  "\t\t\t█████▀ █████  ██     ██  ██    ██    ██   ██ █████▀   ██   ██   ██ ▀█████▄\r\n" +
+                                  "\t\t\t██  ██ ██     ██     ██████    ██    ██   ██ ██  ██   ██   ██   ██      ██\r\n" +
+                                  "\t\t\t██  ██ ▀█████ ██████ ██  ██    ██    ▀█████▀ ██  ██ ██████ ▀█████▀ ██████▀\n");
             }
 
             // opção 1 do switch
@@ -670,7 +691,7 @@ namespace SafeEats
                     Console.WriteLine("Produto NÃO adicionado ao carrinho!");
                     Thread.Sleep(1000);
                     Console.Clear();
-                    MostrarProdutos(emailLogado);
+                    menuPrincipalCliente(emailLogado);
                     return;
                 }
 
@@ -737,7 +758,7 @@ namespace SafeEats
                             Console.WriteLine($"Quantidade do produto atualizada no carrinho: + {quantidade}");
                             Thread.Sleep(1500);
                             Console.Clear();
-                            MostrarProdutos(emailUsuario);
+                            menuPrincipalCliente(emailUsuario);
                         }
                         else
                         {
@@ -850,7 +871,7 @@ namespace SafeEats
 
                         Console.WriteLine($"Total do Carrinho: {totalCarrinho:C2}");
 
-                        Console.WriteLine("\n1 - Criar pedido\n2 - Alterar produto\n3 - Remover produto");
+                        Console.WriteLine("\n1 - Criar pedido\n2 - Alterar produto\n3 - Remover produto\n4 - Voltar");
                         Console.Write("\nDigite a opção: ");
                         string resposta = Console.ReadLine();
 
@@ -867,7 +888,7 @@ namespace SafeEats
                         else if (resposta == "2")
                         {
                             // Alterando produto com base no idItemCarrinho
-                            Console.Write("Qual o ID do Item?: ");
+                            Console.Write("Qual o ID do Produto?: ");
                             string idItemCarrinho = Console.ReadLine();
 
                             // Alterando produto com base no idItemCarrinho
@@ -879,10 +900,19 @@ namespace SafeEats
                         else if (resposta == "3")
                         {
                             // Alterando produto com base no idItemCarrinho
-                            Console.Write("Qual o ID do Item?: ");
+                            Console.Write("Qual o ID do Produto?: ");
                             string idItemCarrinho = Console.ReadLine();
 
                             RemoverItemCarrinho(idItemCarrinho, email);
+                        }
+                        else if (resposta == "4")
+                        {
+                            Console.Clear();
+                            mensagemCarrinho();
+                            Console.WriteLine("\nRetornando ao menu principal...");
+                            Thread.Sleep(1500);
+                            Console.Clear();
+                            menuPrincipalCliente(email);
                         }
                         else
                         {
@@ -930,7 +960,7 @@ namespace SafeEats
                         Console.WriteLine("Quantidade atualizada com sucesso!");
                         Thread.Sleep(1000);
                         Console.Clear();
-                        menuPrincipalCliente(emailLogado);
+                        MeuCarrinho(emailLogado);
                     }
                     else
                     {
@@ -968,7 +998,7 @@ namespace SafeEats
 
                         Thread.Sleep(1000);
                         Console.Clear();
-                        menuPrincipalCliente(emailLogado);
+                        MeuCarrinho(emailLogado);
                     }
                     else
                     {
@@ -1118,7 +1148,12 @@ namespace SafeEats
                         }
                         else
                         {
-                            Console.WriteLine("Não há quantidade suficiente de algum dos produtos no estoque para criar o pedido.");
+                            Console.Clear();
+                            mensagemPedidos();
+                            Console.WriteLine("\nNão há quantidade suficiente de algum dos produtos no estoque para criar o pedido.");
+                            Thread.Sleep(1500);
+                            Console.Clear();
+                            menuPrincipalCliente(emailLogado);
                         }
                     }
                     else
@@ -1401,7 +1436,7 @@ namespace SafeEats
                     int idCliente = (int)cmdBuscarIdCliente.ExecuteScalar();
 
                     Console.WriteLine("Filtrar por status de pedido:");
-                    Console.WriteLine("1 - Em Processamento");
+                    Console.WriteLine("1 - Aguardando aprovação");
                     Console.WriteLine("2 - Concluído");
                     Console.WriteLine("3 - Cancelado");
                     Console.WriteLine("0 - Mostrar todos");
@@ -1415,15 +1450,19 @@ namespace SafeEats
 
                     if (opcaoFiltro == 1)
                     {
-                        consultarPedidosSql += " AND statusPedido = 'Em Processamento'";
+                        consultarPedidosSql += " AND statusPedido = 'Aguardando aprovação'";
                     }
                     else if (opcaoFiltro == 2)
                     {
-                        consultarPedidosSql += " AND statusPedido = 'Concluído'";
+                        consultarPedidosSql += " AND statusPedido = 'Preparando pedido'";
                     }
                     else if (opcaoFiltro == 3)
                     {
-                        consultarPedidosSql += " AND statusPedido = 'Cancelado'";
+                        consultarPedidosSql += " AND statusPedido = 'Pedido encaminhado'";
+                    }
+                    else if (opcaoFiltro == 4)
+                    {
+                        consultarPedidosSql += " AND statusPedido = 'Finalizado'";
                     }
 
                     SqlCommand cmdConsultarPedidos = new SqlCommand(consultarPedidosSql, conexao);
@@ -1445,10 +1484,26 @@ namespace SafeEats
                             Console.WriteLine($"Data do Pedido: {dtPedido.ToString("dd/MM/yyyy")}");
                             Console.WriteLine($"Status do Pedido: {statusPedido}\n");
                         }
+
+                        Console.WriteLine("Pressione qualquer tecla para voltar ao menu principal");
+                        Console.ReadKey();
+                        mensagemPedidos();
+                        Console.WriteLine("\nRetornando ao menu principal...");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        menuPrincipalCliente(emailLogado);
                     }
                     else
                     {
-                        Console.WriteLine("Não há pedidos realizados.");
+                        mensagemPedidos();
+                        Console.WriteLine("\nNão há pedidos realizados."); 
+                        Console.WriteLine("Pressione qualquer tecla para voltar ao menu principal");
+                        Console.ReadKey();
+                        mensagemPedidos();
+                        Console.WriteLine("\nRetornando ao menu principal...");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        menuPrincipalCliente(emailLogado);
                     }
                 }
             }
@@ -1463,7 +1518,8 @@ namespace SafeEats
                 Console.WriteLine("1 - Gerenciar produtos");
                 Console.WriteLine("2 - Gerenciar fornecedores");
                 Console.WriteLine("3 - Gerenciar vendas");
-                Console.WriteLine("4 - Gerenciar estoque");
+                Console.WriteLine("4 - Listar estoque");
+                Console.WriteLine("5 - Gerar relatórios");
                 Console.WriteLine("0 - Sair");
                 Console.Write("\nDigite a opção desejada: ");
                 string op = Console.ReadLine();
@@ -1482,6 +1538,13 @@ namespace SafeEats
                     case "4":
                         ListarProdutosEmEstoque(emailLogado);
                         break;
+                    case "5":
+                        GerarRelatorioVendas(emailLogado);
+                        break;
+                    case "0":
+                        Console.Clear();
+                        tl.menuInicial(); // Chama a função menuInicial para retornar ao login
+                        break;
                     default:
                         comandoInexistente();
                         menuPrincipalAdmin(emailLogado);
@@ -1491,8 +1554,6 @@ namespace SafeEats
 
             private void GerenciarProdutos(string emailLogado)
             {
-                string conString = @"Data Source=DESKTOP-UUDL5AC\SQLEXPRESS;Initial Catalog=SafeEats;Integrated Security=True;";
-
                 while (true)
                 {
                     Console.Clear();
@@ -1502,7 +1563,7 @@ namespace SafeEats
                     Console.WriteLine("1 - Adicionar um produto");
                     Console.WriteLine("2 - Excluir um produto");
                     Console.WriteLine("3 - Alterar um produto");
-                    Console.WriteLine("4 - Sair");
+                    Console.WriteLine("0 - Sair");
                     Console.Write("\nEscolha uma opção: ");
                     string opcao = Console.ReadLine();
 
@@ -1517,7 +1578,7 @@ namespace SafeEats
                         case "3":
                             AlterarProduto(emailLogado);
                             break;
-                        case "4":
+                        case "0":
                             Console.Clear();
                             menuPrincipalAdmin(emailLogado);
                             break;
@@ -1531,27 +1592,114 @@ namespace SafeEats
             private void AdicionarProduto(string emailLogado)
             {
                 string conString = @"Data Source=DESKTOP-UUDL5AC\SQLEXPRESS;Initial Catalog=SafeEats;Integrated Security=True;";
+                string nomeProduto, descricao, precoString, quantidadeString;
+                decimal preco;
+                int quantidade;
 
                 Console.Clear();
                 mensagemProdutos();
 
-                Console.Write("Nome: ");
-                string nome = Console.ReadLine();
-                nome = Console.ReadLine();
-                Console.Write("Descrição: ");
-                string descricao = Console.ReadLine();
-                descricao = Console.ReadLine();
-                Console.Write("Preço: ");
-                decimal preco = decimal.Parse(Console.ReadLine());
-                Console.Write("Quantidade: ");
-                int quantidade = Int32.Parse(Console.ReadLine());
+                while (true)
+                {
+                    Console.Write("Nome: ");
+                    nomeProduto = Console.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(nomeProduto))
+                    {
+                        Console.Clear();
+                        mensagemProdutos();
+                        Console.WriteLine("O nome do produto não pode estar vazio. Por favor, digite novamente.");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        mensagemProdutos();
+                        continue; // Retorna ao início do loop para solicitar o nome novamente
+                    }
+                    else
+                    {
+                        break; // Sai do loop se o nome não estiver vazio
+                    }
+                }
+
+                while (true)
+                {
+                    Console.Write("Descrição: ");
+                    descricao = Console.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(descricao))
+                    {
+                        Console.Clear();
+                        mensagemProdutos();
+                        Console.WriteLine("A descrição do produto não pode estar vazio. Por favor, digite novamente.");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        mensagemProdutos();
+                        Console.WriteLine($"Nome: {nomeProduto}");
+                        continue; // Retorna ao início do loop para solicitar o nome novamente
+                    }
+                    else
+                    {
+                        break; // Sai do loop se o nome não estiver vazio
+                    }
+                }
+
+                while (true)
+                {
+                    Console.Write("Preço: ");
+                    precoString = Console.ReadLine();
+
+                    precoString = precoString.Replace(".", ",");
+
+                    if (decimal.TryParse(precoString, out preco))
+                    {
+                        // Sucesso na conversão, sair do loop
+                        break;
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        mensagemProdutos();
+                        Console.WriteLine("O preço do produto deve ser um valor numérico. Por favor, digite novamente.");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        mensagemProdutos();
+                        Console.WriteLine($"Nome: {nomeProduto}");
+                        Console.WriteLine($"Descrição: {descricao}");
+                        continue; // Retorna ao início do loop para solicitar o preço novamente
+                    }
+                }
+
+                while (true)
+                {
+                    Console.Write("Quantidade: ");
+                    quantidadeString = Console.ReadLine();
+
+                    if (int.TryParse(quantidadeString, out quantidade))
+                    {
+                        // Sucesso na conversão, sair do loop
+                        break;
+                    }
+                    else
+                    { 
+                        Console.Clear();
+                        mensagemProdutos();
+                        Console.WriteLine("A quantidade do produto não pode estar vazio. Por favor, digite novamente.");
+                        Thread.Sleep(1500);
+                        Console.Clear();
+                        mensagemProdutos();
+                        Console.WriteLine($"Nome: {nomeProduto}");
+                        Console.WriteLine($"Descrição: {descricao}");
+                        Console.WriteLine($"Preço: {preco}");
+                        continue; // Retorna ao início do loop para solicitar o nome novamente
+                    }
+                }
+
 
                 using (SqlConnection conexao = new SqlConnection(conString))
                 {
                     conexao.Open();
-                    string inserirProdutoSql = "INSERT INTO Produto (nome, descricao, preco, quantidade) VALUES (@nome, @descricao, @preco, @quantidade)";
+                    string inserirProdutoSql = "INSERT INTO Produto (nome, descricao, preco, quantidade) VALUES (@nomeProduto, @descricao, @preco, @quantidade)";
                     SqlCommand cmdInserirProduto = new SqlCommand(inserirProdutoSql, conexao);
-                    cmdInserirProduto.Parameters.AddWithValue("@nome", nome);
+                    cmdInserirProduto.Parameters.AddWithValue("@nomeProduto", nomeProduto);
                     cmdInserirProduto.Parameters.AddWithValue("@descricao", descricao);
                     cmdInserirProduto.Parameters.AddWithValue("@preco", preco);
                     cmdInserirProduto.Parameters.AddWithValue("@quantidade", quantidade);
@@ -1790,19 +1938,16 @@ namespace SafeEats
                 {
                     conexao.Open();
 
-                    string consulta = "SELECT idProduto, nome, descricao, preco, quantidade FROM Produto";
+                    string consulta = "SELECT nome, quantidade FROM Produto";
                     SqlCommand cmd = new SqlCommand(consulta, conexao);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        int idProduto = reader.GetInt32(0);
-                        string nome = reader.GetString(1);
-                        string descricao = reader.GetString(2);
-                        decimal preco = reader.GetDecimal(3);
-                        int quantidade = reader.GetInt32(4);
+                        string nome = reader.GetString(0);
+                        int quantidade = reader.GetInt32(1);
 
-                        Console.WriteLine($"ID: {idProduto} | Nome: {nome} | Descrição: {descricao} | Preço: {preco:C2} | Quantidade: {quantidade}");
+                        Console.WriteLine($"Nome: {nome} | Quantidade: {quantidade}");
                     }
 
                     reader.Close();
@@ -2348,28 +2493,28 @@ namespace SafeEats
                 while (true)
                 {
                     Console.Clear();
-                    mensagemProdutos();
+                    mensagemVendas();
 
                     Console.WriteLine("\n[GERENCIAMENTO] Vendas\n");
                     Console.WriteLine("1 - Alterar uma venda");
                     Console.WriteLine("2 - Excluir uma venda");
                     Console.WriteLine("3 - Listar vendas");
-                    Console.WriteLine("4 - Sair");
+                    Console.WriteLine("0 - Sair");
                     Console.Write("\nEscolha uma opção: ");
                     string opcao = Console.ReadLine();
 
                     switch (opcao)
                     {
                         case "1":
-                            AlterarPedido(emailLogado);
+                            AlterarVenda(emailLogado);
                             break;
                         case "2":
-                            ExcluirProduto(emailLogado);
+                            ExcluirVenda(emailLogado);
                             break;
                         case "3":
-                            AlterarProduto(emailLogado);
+                            ListarVendas(emailLogado);
                             break;
-                        case "4":
+                        case "0":
                             Console.Clear();
                             menuPrincipalAdmin(emailLogado);
                             break;
@@ -2380,7 +2525,7 @@ namespace SafeEats
                 }
             }
 
-            public void AlterarPedido(string emailLogado)
+            public void AlterarVenda(string emailLogado)
             {
                 string conString = @"Data Source=DESKTOP-UUDL5AC\SQLEXPRESS;Initial Catalog=SafeEats;Integrated Security=True;";
 
@@ -2643,35 +2788,75 @@ namespace SafeEats
                     mensagemVendas();
                     Console.WriteLine("Forma de envio do pedido alterado com sucesso!");
                 }
-                /*else if (opcao == "3")
+                else if (opcao == "3")
                 {
                     Console.Clear();
-                    mensagemProdutos();
-                    Console.Write("[GERENCIAMENTO] Nova Quantidade: ");
-                    if (!int.TryParse(Console.ReadLine(), out int novaQuantidade))
+                    mensagemVendas();
+                    using (SqlConnection conexao = new SqlConnection(conString))
                     {
-                        Console.Clear();
-                        mensagemProdutos();
-                        Console.WriteLine("Produto não alterado.\nMotivo: Quantidade inválida.");
-                        Thread.Sleep(1500);
-                        Console.Clear();
-                        GerenciarProdutos(emailLogado);
-                        return;
+                        conexao.Open();
+                        string consulta = "SELECT statusPedido FROM Pedido WHERE codPedido = @codPedido";
+                        SqlCommand cmd = new SqlCommand(consulta, conexao);
+                        cmd.Parameters.AddWithValue("@codPedido", codPedido);
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"[GERENCIAMENTO] Status atual do pedido: {reader["statusPedido"]}");
+                        }
+
+                        reader.Close();
+                    }
+
+                    string novoStatusPedido = null;
+                    bool statusValido = false;
+
+                    while (!statusValido)
+                    {
+                        Console.WriteLine("[GERENCIAMENTO] Novo status do pedido");
+                        Console.Write("\n1 - Aguardando aprovação\n2 - Preparando pedido\n3 - Pedido encaminhado\n4 - Finalizado\n\nEscolha a opção(1 à 4): ");
+                        string inputFormaPagamento = Console.ReadLine();
+
+                        switch (inputFormaPagamento)
+                        {
+                            case "1":
+                                novoStatusPedido = "Aguardando aprovação";
+                                statusValido = true;
+                                break;
+                            case "2":
+                                novoStatusPedido = "Preparando pedido";
+                                statusValido = true;
+                                break;
+                            case "3":
+                                novoStatusPedido = "Pedido encaminhado";
+                                statusValido = true;
+                                break;
+                            case "4":
+                                novoStatusPedido = "Finalizado";
+                                statusValido = true;
+                                break;
+                            default:
+                                Console.Clear();
+                                mensagemVendas();
+                                Console.WriteLine("Opção inválida. Tente novamente.");
+                                break;
+                        }
                     }
 
                     using (SqlConnection conexao = new SqlConnection(conString))
                     {
                         conexao.Open();
-                        string alterarQuantidadeSql = "UPDATE Produto SET quantidade = @novaQuantidade WHERE idProduto = @idProduto";
-                        SqlCommand cmdAlterarQuantidade = new SqlCommand(alterarQuantidadeSql, conexao);
-                        cmdAlterarQuantidade.Parameters.AddWithValue("@novaQuantidade", novaQuantidade);
-                        cmdAlterarQuantidade.Parameters.AddWithValue("@idProduto", idProduto);
-                        cmdAlterarQuantidade.ExecuteNonQuery();
+                        string alterarFormaPagamentoSql = "UPDATE Pedido SET statusPedido = @novoStatusPedido WHERE codPedido = @codPedido";
+                        SqlCommand cmdAlterarFormaPagamento = new SqlCommand(alterarFormaPagamentoSql, conexao);
+                        cmdAlterarFormaPagamento.Parameters.AddWithValue("@novoStatusPedido", novoStatusPedido);
+                        cmdAlterarFormaPagamento.Parameters.AddWithValue("@codPedido", codPedido);
+                        cmdAlterarFormaPagamento.ExecuteNonQuery();
                     }
+
                     Console.Clear();
-                    mensagemProdutos();
-                    Console.WriteLine("Quantidade do produto alterada com sucesso!");
-                }*/
+                    mensagemVendas();
+                    Console.WriteLine("Status do pedido alterado com sucesso!");
+                }
                 else
                 {
                     Console.Clear();
@@ -2684,56 +2869,324 @@ namespace SafeEats
                 GerenciarVendas(emailLogado);
             }
 
-            public void ExcluirPedido(string emailLogado, int codigoConsulta)
+            void ExcluirVenda(string emailLogado)
             {
                 string conString = @"Data Source=DESKTOP-UUDL5AC\SQLEXPRESS;Initial Catalog=SafeEats;Integrated Security=True;";
 
                 Console.Clear();
                 mensagemVendas();
 
-                // Confirmação de exclusão
-                Console.Write("Tem certeza de que deseja excluir este pedido? (S/N): ");
-                string confirmacao = Console.ReadLine();
-
-                if (confirmacao.ToUpper() == "S")
+                using (SqlConnection conexao = new SqlConnection(conString))
                 {
-                    // Exclui o pedido do banco de dados
+                    conexao.Open();
+                    string consulta = "SELECT * FROM Pedido";
+                    SqlCommand cmd = new SqlCommand(consulta, conexao);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        int idFormaPagamento = reader.GetInt32(reader.GetOrdinal("idFormaPagamento"));
+                        int idFormaEnvio = reader.GetInt32(reader.GetOrdinal("idFormaEnvio"));
+
+                        string formaPagamentoFormatada;
+                        switch (idFormaPagamento)
+                        {
+                            case 1:
+                                formaPagamentoFormatada = "Crédito";
+                                break;
+                            case 2:
+                                formaPagamentoFormatada = "Débito";
+                                break;
+                            case 3:
+                                formaPagamentoFormatada = "PIX";
+                                break;
+                            default:
+                                formaPagamentoFormatada = "Desconhecida";
+                                break;
+                        }
+
+                        string formaEnvioFormatada;
+                        switch (idFormaEnvio)
+                        {
+                            case 1:
+                                formaEnvioFormatada = "Correios";
+                                break;
+                            case 2:
+                                formaEnvioFormatada = "Transportadora";
+                                break;
+                            default:
+                                formaEnvioFormatada = "Desconhecida";
+                                break;
+                        }
+
+                        DateTime dtPedido = reader.GetDateTime(reader.GetOrdinal("dtPedido"));
+                        string dataPedidoFormatada = dtPedido.ToShortDateString();
+
+                        Console.WriteLine($"Código Pedido: {reader["codPedido"]} | Pagamento: {formaPagamentoFormatada} | Envio: {formaEnvioFormatada} | Data do Pedido: {dataPedidoFormatada}");
+                    }
+
+                    reader.Close();
+                }
+
+                Console.Write("\n\n[GERENCIAMENTO] Digite o ID do pedido a excluir: ");
+                int codPedido = int.Parse(Console.ReadLine());
+
+                Console.Clear();
+                mensagemVendas();
+
+                Console.Write("[GERENCIAMENTO] Confirmar ação!\n\n1 - Sim\n2 - Não\n\nDigite a opção: ");
+                string op = Console.ReadLine();
+
+                if (op == "1" || op.ToLower() == "s" || op.ToLower() == "sim")
+                {
                     using (SqlConnection conexao = new SqlConnection(conString))
                     {
                         conexao.Open();
-
-                        string excluirPedidoQuery = "DELETE FROM Pedido WHERE codPedido = @codPedido";
-                        SqlCommand cmdExcluirPedido = new SqlCommand(excluirPedidoQuery, conexao);
-                        // Supondo que você tenha o código do pedido armazenado em uma variável chamada codigoConsulta
-                        cmdExcluirPedido.Parameters.AddWithValue("@codPedido", codigoConsulta);
-
-                        int linhasAfetadas = cmdExcluirPedido.ExecuteNonQuery();
-
-                        if (linhasAfetadas > 0)
-                        {
-                            Console.WriteLine("Pedido excluído com sucesso!");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Falha ao excluir o pedido.");
-                        }
+                        string excluirPedidoSql = @"
+                        DELETE FROM PedidoItem WHERE codPedido = @codPedido;
+                        DELETE FROM Pedido WHERE codPedido = @codPedido;";
+                        SqlCommand cmdExcluirPedido = new SqlCommand(excluirPedidoSql, conexao);
+                        cmdExcluirPedido.Parameters.AddWithValue("@codPedido", codPedido);
+                        cmdExcluirPedido.ExecuteNonQuery();
                     }
+                    Console.Clear();
+                    mensagemVendas();
+                    Console.WriteLine("[GERENCIAMENTO] Pedido excluído com sucesso!");
+                    Thread.Sleep(1500);
+                    Console.Clear();
+                    GerenciarVendas(emailLogado);
                 }
-                else
+                else if (op == "2" || op.ToLower() == "n" || op.ToLower() == "não" || op.ToLower() == "nao")
                 {
-                    Console.WriteLine("Exclusão cancelada.");
+                    Console.Clear();
+                    mensagemVendas();
+                    Console.WriteLine("[GERENCIAMENTO] Exclusão de pedido cancelada.");
+                    Thread.Sleep(1500);
+                    Console.Clear();
+                    GerenciarVendas(emailLogado);
                 }
+            }
+
+            public void ListarVendas(string emailLogado)
+            {
+                string conString = @"Data Source=DESKTOP-UUDL5AC\SQLEXPRESS;Initial Catalog=SafeEats;Integrated Security=True;";
+
+                Console.Clear();
+                mensagemVendas();
+
+                using (SqlConnection conexao = new SqlConnection(conString))
+                {
+                    conexao.Open();
+                    string consulta = "SELECT codPedido, idFormaPagamento, idFormaEnvio, dtPedido, statusPedido FROM Pedido";
+                    SqlCommand cmd = new SqlCommand(consulta, conexao);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        int idFormaPagamento = reader.GetInt32(reader.GetOrdinal("idFormaPagamento"));
+                        int idFormaEnvio = reader.GetInt32(reader.GetOrdinal("idFormaEnvio"));
+
+                        string formaPagamentoFormatada;
+                        switch (idFormaPagamento)
+                        {
+                            case 1:
+                                formaPagamentoFormatada = "Crédito";
+                                break;
+                            case 2:
+                                formaPagamentoFormatada = "Débito";
+                                break;
+                            case 3:
+                                formaPagamentoFormatada = "PIX";
+                                break;
+                            default:
+                                formaPagamentoFormatada = "Desconhecida";
+                                break;
+                        }
+
+                        string formaEnvioFormatada;
+                        switch (idFormaEnvio)
+                        {
+                            case 1:
+                                formaEnvioFormatada = "Correios";
+                                break;
+                            case 2:
+                                formaEnvioFormatada = "Transportadora";
+                                break;
+                            default:
+                                formaEnvioFormatada = "Desconhecida";
+                                break;
+                        }
+
+                        DateTime dtPedido = reader.GetDateTime(reader.GetOrdinal("dtPedido"));
+                        string dataPedidoFormatada = dtPedido.ToShortDateString();
+
+                        Console.WriteLine($"Código Pedido: {reader["codPedido"]} | Pagamento: {formaPagamentoFormatada} | Envio: {formaEnvioFormatada} | Data do Pedido: {dataPedidoFormatada} | Status: {reader["statusPedido"]}");
+                    }
+
+                    reader.Close();
+                }
+
+                Console.WriteLine("\nPressione qualquer tecla para voltar ao menu principal...");
+                Console.ReadKey();
+                Console.Clear();
+                GerenciarVendas(emailLogado);
+            }
+
+            public void GerarRelatorioVendas(string emailLogado)
+            {
+                string conString = @"Data Source=DESKTOP-UUDL5AC\SQLEXPRESS;Initial Catalog=SafeEats;Integrated Security=True;";
+
+                Console.Clear();
+                mensagemRelatorios();
+
+                Console.Write("[GERENCIAMENTO] Relatório de vendas\n\n1 - Janeiro\n2 - Fevereiro\n3 - Março\n4 - Abril\n5 - Maio\n6 - Junho\n" +
+                              "7 - Julho\n8 - Agosto\n9 - Setembro\n10 - Outubro\n11 - Novembro\n12 - Dezembro\n\nDigite o número do mês para gerar o relatório: ");
+                int mes = int.Parse(Console.ReadLine());
+                string nomeMes;
+                switch (mes)
+                {
+                    case 1: nomeMes = "Janeiro"; break;
+                    case 2: nomeMes = "Fevereiro"; break;
+                    case 3: nomeMes = "Março"; break;
+                    case 4: nomeMes = "Abril"; break;
+                    case 5: nomeMes = "Maio"; break;
+                    case 6: nomeMes = "Junho"; break;
+                    case 7: nomeMes = "Julho"; break;
+                    case 8: nomeMes = "Agosto"; break;
+                    case 9: nomeMes = "Setembro"; break;
+                    case 10: nomeMes = "Outubro"; break;
+                    case 11: nomeMes = "Novembro"; break;
+                    case 12: nomeMes = "Dezembro"; break;
+                    default:
+                        Console.WriteLine("Mês inválido. Por favor, digite um número entre 1 e 12.");
+                        return; // Sai da função se o mês for inválido
+                }
+
+                Console.Clear();
+                mensagemRelatorios();
+
+                Console.WriteLine($"[GERENCIAMENTO] Mês selecionado: {nomeMes}");
+                Console.Write("[GERENCIAMENTO] Relatório de vendas\n\nDigite o ano para gerar o relatório: ");
+                int ano = int.Parse(Console.ReadLine());
+
+
+                Console.Clear();
+                mensagemRelatorios();
+
+                using (SqlConnection conexao = new SqlConnection(conString))
+                {
+                    conexao.Open();
+
+                    // Consulta para contar o número de pedidos e calcular o valor total
+                    string consultaPedidos = @"
+        SELECT COUNT(*) AS TotalPedidos, 
+               ISNULL(SUM(pi.quantidade * pi.precoUnitario), 0) AS ValorTotalRecebido 
+        FROM Pedido p
+        JOIN PedidoItem pi ON p.codPedido = pi.codPedido
+        WHERE MONTH(p.dtPedido) = @mes AND YEAR(p.dtPedido) = @ano";
+
+                    // Consulta para contar a quantidade total de produtos vendidos
+                    string consultaProdutosVendidos = @"
+        SELECT pr.nome, ISNULL(SUM(pi.quantidade), 0) AS TotalProdutosVendidos 
+        FROM Pedido p
+        JOIN PedidoItem pi ON p.codPedido = pi.codPedido
+        JOIN Produto pr ON pi.idProduto = pr.idProduto
+        WHERE MONTH(p.dtPedido) = @mes AND YEAR(p.dtPedido) = @ano
+        GROUP BY pr.nome";
+
+                    SqlCommand cmdPedidos = new SqlCommand(consultaPedidos, conexao);
+                    cmdPedidos.Parameters.AddWithValue("@mes", mes);
+                    cmdPedidos.Parameters.AddWithValue("@ano", ano);
+
+                    SqlDataReader readerPedidos = cmdPedidos.ExecuteReader();
+                    readerPedidos.Read();
+
+                    int totalPedidos = readerPedidos.GetInt32(readerPedidos.GetOrdinal("TotalPedidos"));
+                    decimal valorTotalRecebido = readerPedidos.GetDecimal(readerPedidos.GetOrdinal("ValorTotalRecebido"));
+
+                    readerPedidos.Close();
+
+                    SqlCommand cmdProdutosVendidos = new SqlCommand(consultaProdutosVendidos, conexao);
+                    cmdProdutosVendidos.Parameters.AddWithValue("@mes", mes);
+                    cmdProdutosVendidos.Parameters.AddWithValue("@ano", ano);
+
+                    SqlDataReader readerProdutosVendidos = cmdProdutosVendidos.ExecuteReader();
+
+                    Console.WriteLine($"Relatório de Vendas - {nomeMes} {ano}");
+                    Console.WriteLine($"Total de Pedidos: {totalPedidos}");
+                    Console.WriteLine($"Valor Total Recebido: {valorTotalRecebido:C}");
+
+                    Console.WriteLine("\nProdutos Vendidos:");
+                    while (readerProdutosVendidos.Read())
+                    {
+                        string nomeProduto = readerProdutosVendidos.GetString(readerProdutosVendidos.GetOrdinal("nome"));
+                        int totalProdutosVendidos = readerProdutosVendidos.GetInt32(readerProdutosVendidos.GetOrdinal("TotalProdutosVendidos"));
+                        Console.WriteLine($"Produto: {nomeProduto} | Quantidade Vendida: {totalProdutosVendidos}");
+                    }
+
+                    readerProdutosVendidos.Close();
+
+                    // Pergunta se o usuário deseja ver os detalhes dos pedidos
+                    Console.Write("\nDeseja ver os detalhes dos pedidos? (S/N): ");
+                    string resposta = Console.ReadLine().ToUpper();
+
+                    if (resposta == "S")
+                    {
+                        Console.Clear();
+                        mensagemRelatorios();
+                        Console.WriteLine($"Pedidos realizados em: {nomeMes} - {ano}");
+                        // Consulta para detalhes dos pedidos
+                        string consultaDetalhes = @"
+            SELECT p.codPedido, fp.nomeFormaPagamento, fe.nomeFormaEnvio, p.dtPedido, p.statusPedido 
+            FROM Pedido p
+            JOIN FormaPagamento fp ON p.idFormaPagamento = fp.idFormaPagamento
+            JOIN FormaEnvio fe ON p.idFormaEnvio = fe.idFormaEnvio
+            WHERE MONTH(p.dtPedido) = @mes AND YEAR(p.dtPedido) = @ano";
+
+                        SqlCommand cmdDetalhes = new SqlCommand(consultaDetalhes, conexao);
+                        cmdDetalhes.Parameters.AddWithValue("@mes", mes);
+                        cmdDetalhes.Parameters.AddWithValue("@ano", ano);
+
+                        SqlDataReader readerDetalhes = cmdDetalhes.ExecuteReader();
+
+                        while (readerDetalhes.Read())
+                        {
+                            string formaPagamentoFormatada = readerDetalhes.GetString(readerDetalhes.GetOrdinal("nomeFormaPagamento"));
+                            string formaEnvioFormatada = readerDetalhes.GetString(readerDetalhes.GetOrdinal("nomeFormaEnvio"));
+                            DateTime dtPedido = readerDetalhes.GetDateTime(readerDetalhes.GetOrdinal("dtPedido"));
+                            string dataPedidoFormatada = dtPedido.ToShortDateString();
+                            string statusPedido = readerDetalhes.GetString(readerDetalhes.GetOrdinal("statusPedido"));
+
+                            Console.WriteLine($"Código Pedido: {readerDetalhes["codPedido"]} | Pagamento: {formaPagamentoFormatada} | Envio: {formaEnvioFormatada} | Data do Pedido: {dataPedidoFormatada} | Status: {statusPedido}");
+                        }
+
+                        readerDetalhes.Close();
+                    }
+                    else
+                    {
+                        // Redireciona para o menu principal
+                        menuPrincipalAdmin(emailLogado);
+                    }
+
+                    Console.WriteLine("\nPressione qualquer tecla para voltar ao menu principal...");
+                    Console.ReadKey();
+                    Console.Clear();
+                    menuPrincipalAdmin(emailLogado);
+                }
+
+
+
+                Console.WriteLine("\nPressione qualquer tecla para voltar ao menu principal...");
+                Console.ReadKey();
+                Console.Clear();
+                GerenciarVendas(emailLogado);
             }
 
 
             static void Main(string[] args)
             {
-                //TelaLogin tl = new TelaLogin();
-                //tl.menuInicial();
-
-                ProgramaGeral pg = new ProgramaGeral();
-                //pg.menuPrincipalCliente("test");
-                pg.menuPrincipalAdmin("test");
+                TelaLogin tl = new TelaLogin();
+                tl.menuInicial();
             }
         }
     }
